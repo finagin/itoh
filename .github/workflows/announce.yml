@@ -13,7 +13,8 @@ jobs:
       - name: Extract cities
         id: cities
         run: |
-          jq [.cities[].name] config.json >> "$GITHUB_OUTPUT"
+          CITIES=$(jq [.cities[].name] config.json)
+          echo "cities=$CITIES" >> "$GITHUB_OUTPUT"
 
   announce-hangout:
     runs-on: ubuntu-latest
