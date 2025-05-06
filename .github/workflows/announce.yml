@@ -29,6 +29,16 @@ jobs:
         env:
           CHAT_ID: ${{ secrets[format('{0}_CHAT_ID', matrix.city.name)] }}
           TZ: ${{ matrix.city.timezone }}
+          MESSAGE: ${{ format(matrix.city.message, matrix.city.time, secrets[format('{0}_AREA_NAME', matrix.city.name)], secrets[format('{0}_AREA_LINK', matrix.city.name)], secrets[format('{0}_MODERATOR', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
-          echo "City: ${{ matrix.city.name }}"
-          echo "Chat ID: $CHAT_ID"
+          curl -s -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "chat_id": $CHAT_ID,
+              "text": "${{ env.MESSAGE }}",
+              "parse_mode": "MarkdownV2",
+              "protect_content": true,
+              "disable_notification": true,
+              "link_preview_options": {"is_disabled": true}
+            }' \
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage
