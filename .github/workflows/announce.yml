@@ -68,6 +68,7 @@ jobs:
                 {"text": "Возможно"},
                 {"text": "Нет"}
               ],
-              "is_anonymous": false
+              "is_anonymous": false,
+              "is_closed": true
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPoll
