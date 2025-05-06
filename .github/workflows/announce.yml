@@ -43,6 +43,10 @@ jobs:
               "link_preview_options": {"is_disabled": true}
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage | jq .result.message_id)
+          echo "MESSAGE_ID=$MESSAGE_ID" >> $GITHUB_ENV
+      - name: Pin announce message
+        if: ${{ env.MESSAGE_ID }}
+        run: |
           curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
@@ -50,4 +54,17 @@ jobs:
               "message_id": ${{ env.MESSAGE_ID }},
               "disable_notification": true
             }' \
-          https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage
+          curl -s -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "chat_id": ${{ env.CHAT_ID }},
+              "question": "Придёшь на встречу?",
+              "options": [
+                {"text": "Да"},
+                {"text": "Возможно"},
+                {"text": "Нет"}
+              ],
+              "is_anonymous": false
+            }' \
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPoll
