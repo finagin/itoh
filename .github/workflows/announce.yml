@@ -3,6 +3,7 @@ on:
 
 jobs:
   define-matrix:
+    name: Define allowed cities
     runs-on: ubuntu-latest
 
     outputs:
@@ -31,7 +32,7 @@ jobs:
           TZ: ${{ matrix.city.timezone }}
           MESSAGE: ${{ format(matrix.city.message, matrix.city.time, secrets[format('{0}_AREA_NAME', matrix.city.name)], secrets[format('{0}_AREA_LINK', matrix.city.name)], secrets[format('{0}_MODERATOR', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
-          curl -s -X POST \
+          MESSAGE_ID=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": ${{ env.CHAT_ID }},
@@ -41,4 +42,12 @@ jobs:
               "disable_notification": true,
               "link_preview_options": {"is_disabled": true}
             }' \
-            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage | jq .result.message_id)
+          curl -s -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "chat_id": ${{ env.CHAT_ID }},
+              "message_id": ${MESSAGE_ID},
+              "disable_notification": true
+            }' \
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage > /dev/null
