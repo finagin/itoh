@@ -34,7 +34,7 @@ jobs:
           curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
-              "chat_id": $CHAT_ID,
+              "chat_id": ${{ env.CHAT_ID }},
               "text": "${{ env.MESSAGE }}",
               "parse_mode": "MarkdownV2",
               "protect_content": true,
