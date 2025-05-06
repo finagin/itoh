@@ -27,8 +27,8 @@ jobs:
     steps:
       - name: Announce Hangout
         env:
-          CHAT_ID_VAR: ${{ format('{0}_CHAT_ID', matrix.city.name) }}
+          CHAT_ID: ${{ secrets[format('{0}_CHAT_ID', matrix.city.name)] }}
           TZ: ${{ matrix.city.timezone }}
         run: |
           echo "City: ${{ matrix.city.name }}"
-          echo "Chat ID: ${!CHAT_ID_VAR}"
+          echo "Chat ID: $CHAT_ID"
