@@ -10,7 +10,8 @@
         },
         {
             "name": "Kazan",
-            "timezone": "Europe/Moscow"
+            "timezone": "Europe/Moscow",
+            "time": "19:00"
         }
     ]
 }

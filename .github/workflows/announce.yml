@@ -30,4 +30,4 @@ jobs:
           TZ: ${{ matrix.city.timezone }}
         run: |
           echo "City: ${{ matrix.city.name }}"
-          echo "Chat ID: $$CHAT_ID_VAR"
+          echo "Chat ID: ${!CHAT_ID_VAR}"
