@@ -14,7 +14,7 @@ jobs:
       - name: Extract cities
         id: extractor
         run: |
-          echo "cities=$(jq -c '[.defaults as $defaults | .cities[] | ($defaults + .)]' config.json)" >> "$GITHUB_OUTPUT"
+          echo "cities=$(jq -cS '[.defaults as $defaults | .cities[] | ($defaults + .)]' config.json)" >> "$GITHUB_OUTPUT"
 
   announce-hangout:
     runs-on: ubuntu-latest
@@ -26,8 +26,8 @@ jobs:
     steps:
       - name: Announce Hangout
         env:
-          CHAT_ID: ${{ format('{0}_CHAT_ID', matrix.city.name) }}
+          CHAT_ID_VAR: ${{ format('{0}_CHAT_ID', matrix.city.name) }}
           TZ: ${{ matrix.city.timezone }}
         run: |
           echo "City: ${{ matrix.city.name }}"
-          echo "Chat ID: ${{ env.CHAT_ID }}"
+          echo "Chat ID: $$CHAT_ID_VAR"
