@@ -1,0 +1,28 @@
+on:
+  push:
+
+jobs:
+  define-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      cities: ${{ steps.cities.outputs.cities }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract cities
+        id: cities
+        run: |
+          jq [.cities[].name] config.json >> "$GITHUB_OUTPUT"
+
+  announce-hangout:
+    runs-on: ubuntu-latest
+    needs: define-matrix
+    strategy:
+      matrix:
+        city: ${{ fromJSON(needs.define-matrix.outputs.cities) }}
+
+    steps:
+      - name: Announce Hangout
+        run: |
+          echo "City: ${{ matrix.city }}"

@@ -1,0 +1,16 @@
+{
+    "defaults": {
+        "weekday": "saturday",
+        "time": "20:00"
+    },
+    "cities": [
+        {
+            "name": "Batumi",
+            "timezone": "Asia/Tbilisi"
+        },
+        {
+            "name": "Kazan",
+            "timezone": "Europe/Moscow"
+        }
+    ]
+}
