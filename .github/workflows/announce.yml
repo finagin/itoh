@@ -43,6 +43,9 @@ jobs:
               "link_preview_options": {"is_disabled": true}
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage | jq .result.message_id)
+          echo $MESSAGE_ID
+          echo "[$MESSAGE_ID]"
+          echo "[${MESSAGE_ID}]"
           curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
