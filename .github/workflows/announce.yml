@@ -25,11 +25,12 @@ jobs:
       matrix:
         city: ${{ fromJSON(needs.define-matrix.outputs.cities) }}
 
+    env:
+      CHAT_ID: ${{ secrets[format('{0}_CHAT_ID', matrix.city.name)] }}
+
     steps:
       - name: Announce Hangout
         env:
-          CHAT_ID: ${{ secrets[format('{0}_CHAT_ID', matrix.city.name)] }}
-          TZ: ${{ matrix.city.timezone }}
           MESSAGE: ${{ format(matrix.city.message, matrix.city.time, secrets[format('{0}_AREA_NAME', matrix.city.name)], secrets[format('{0}_AREA_LINK', matrix.city.name)], secrets[format('{0}_MODERATOR', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
           MESSAGE_ID=$(curl -s -X POST \
@@ -55,6 +56,8 @@ jobs:
               "disable_notification": true
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage
+      - name: Presence poll
+        run: |
           curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
