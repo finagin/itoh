@@ -6,14 +6,15 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      cities: ${{ steps.cities.outputs.cities }}
+      cities: ${{ steps.extractor.outputs.cities }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout config
+        uses: actions/checkout@v4
       - name: Extract cities
-        id: cities
+        id: extractor
         run: |
-          echo "cities=$(jq -c [.cities[].name] config.json)" >> "$GITHUB_OUTPUT"
+          echo "cities=$(jq -c '[.defaults as $defaults | .cities[] | ($defaults + .)]' config.json)" >> "$GITHUB_OUTPUT"
 
   announce-hangout:
     runs-on: ubuntu-latest
@@ -24,5 +25,9 @@ jobs:
 
     steps:
       - name: Announce Hangout
+        env:
+          CHAT_ID: ${{ format('{0}_CHAT_ID', matrix.city.name) }}
+          TZ: ${{ matrix.city.timezone }}
         run: |
-          echo "City: ${{ matrix.city }}"
+          echo "City: ${{ matrix.city.name }}"
+          echo "Chat ID: ${{ env.CHAT_ID }}"
