@@ -17,6 +17,7 @@ jobs:
           echo "cities=$(jq -cS '[.defaults as $defaults | .cities[] | ($defaults + .)]' config.json)" >> "$GITHUB_OUTPUT"
 
   announce-hangout:
+    name: "Announce hangout at ${{ matrix.city.name }}"
     runs-on: ubuntu-latest
     needs: define-matrix
     strategy:
