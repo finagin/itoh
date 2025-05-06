@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Announce Hangout
         env:
-          MESSAGE: ${{ format(matrix.city.message, matrix.city.time, secrets[format('{0}_AREA_NAME', matrix.city.name)], secrets[format('{0}_AREA_LINK', matrix.city.name)], secrets[format('{0}_MODERATOR', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
+          MESSAGE: ${{ format(matrix.city.message, matrix.city.time, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
           MESSAGE_ID=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
