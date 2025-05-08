@@ -15,8 +15,4 @@ jobs:
       - name: Extract cities
         id: extractor
         run: |
-          JQ_ACTIONS="[.defaults as $defaults | .cities[] | ($defaults + .)]"               # Merge defaults with each city
-          JQ_ACTIONS+=" | .[] | select(.weekday | contains(\"$(date -d '+2day' +%A)\"))"   # Filter by weekday
-          echo "cities=$(jq -cS $JQ_ACTIONS config.json)"
-          echo "cities=$(jq -cS '$JQ_ACTIONS' config.json)"
-          echo "cities=$(jq -cS $JQ_ACTIONS config.json)" >> "$GITHUB_OUTPUT"
+          echo "cities=$(jq -cS '[.defaults as $defaults | .cities[] | ($defaults + .)] | .[] | select(.weekday | contains(\"$(date -d '+2day' +%A)\"))' config.json)"
