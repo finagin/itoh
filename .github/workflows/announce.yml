@@ -49,7 +49,7 @@ jobs:
               "link_preview_options": {"is_disabled": true}
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage)
-          if [ $RESPONSE | jq .ok != "true" ]; then
+          if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
             echo "Error: $RESPONSE"
             exit 1
           fi
@@ -65,7 +65,7 @@ jobs:
               "disable_notification": true
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage)
-          if [ $RESPONSE | jq .ok != "true" ]; then
+          if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
             echo "Error: $RESPONSE"
             exit 1
           fi
@@ -85,7 +85,7 @@ jobs:
               "is_closed": true
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPoll)
-          if [ $RESPONSE | jq .ok != "true" ]; then
+          if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
             echo "Error: $RESPONSE"
             exit 1
           fi
