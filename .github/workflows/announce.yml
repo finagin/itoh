@@ -15,7 +15,7 @@ jobs:
       - name: Extract cities
         id: extractor
         env:
-          WEEKDAY: $(date -d tomorrow +%A)
+          WEEKDAY: "$(date -d tomorrow +%A)"
         run: |
           echo "cities=$(jq -cS --arg WEEKDAY "$WEEKDAY" '
                   [.defaults as $defaults | .cities[] | ($defaults + .)]
