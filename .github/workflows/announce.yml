@@ -15,7 +15,8 @@ jobs:
       - name: Extract cities
         id: extractor
         run: |
+          WEEKDAY="$(date -d '+2day' +%A)"  # Get the weekday for two days from now
           JQ_ACTIONS="[.defaults as $defaults | .cities[] | ($defaults + .)]"               # Merge defaults with each city
-          JQ_ACTIONS+=" | .[] | select(.weekday | contains(\"$(date -d '+2day' +%A)\"))"   # Filter by weekday
+          JQ_ACTIONS+=" | .[] | select(.weekday | contains(\"$WEEKDAY\"))"   # Filter by weekday
           echo "cities=$(jq -cS '${JQ_ACTIONS}' config.json)"
           echo "cities=$(jq -cS '${JQ_ACTIONS}' config.json)" >> "$GITHUB_OUTPUT"
