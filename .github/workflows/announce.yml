@@ -38,7 +38,7 @@ jobs:
         env:
           MESSAGE: ${{ format(matrix.city.message, matrix.city.time, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
-          MESSAGE_ID=$(curl -s -X POST \
+          RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": ${{ env.CHAT_ID }},
@@ -48,22 +48,30 @@ jobs:
               "disable_notification": true,
               "link_preview_options": {"is_disabled": true}
             }' \
-            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage | jq .result.message_id)
-          echo "MESSAGE_ID=$MESSAGE_ID" >> $GITHUB_ENV
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage)
+          if [ $RESPONSE | jq .ok != "true" ]; then
+            echo "Error: $RESPONSE"
+            exit 1
+          fi
+          echo "MESSAGE_ID=$(echo $RESPONSE | jq .result.message_id)" >> $GITHUB_ENV
       - name: Pin announce message
         if: ${{ env.MESSAGE_ID }}
         run: |
-          curl -s -X POST \
+          RESPONSE$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": ${{ env.CHAT_ID }},
               "message_id": ${{ env.MESSAGE_ID }},
               "disable_notification": true
             }' \
-            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage)
+          if [ $RESPONSE | jq .ok != "true" ]; then
+            echo "Error: $RESPONSE"
+            exit 1
+          fi
       - name: Presence poll
         run: |
-          curl -s -X POST \
+          RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": ${{ env.CHAT_ID }},
@@ -76,4 +84,8 @@ jobs:
               "is_anonymous": false,
               "is_closed": true
             }' \
-            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPoll
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPoll)
+          if [ $RESPONSE | jq .ok != "true" ]; then
+            echo "Error: $RESPONSE"
+            exit 1
+          fi
