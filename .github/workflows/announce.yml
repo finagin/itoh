@@ -57,7 +57,7 @@ jobs:
       - name: Pin announce message
         if: ${{ env.MESSAGE_ID }}
         run: |
-          RESPONSE$(curl -s -X POST \
+          RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": ${{ env.CHAT_ID }},
