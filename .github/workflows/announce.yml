@@ -14,10 +14,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Extract cities
         id: extractor
-        env:
-          WEEKDAY: "$(date -d tomorrow +%A)"
         run: |
-          echo "cities=$(jq -cS --arg WEEKDAY "$WEEKDAY" '
+          echo "cities=$(jq -cS --arg WEEKDAY "$(date -d tomorrow +%A)" '
                   [.defaults as $defaults | .cities[] | ($defaults + .)]
                   | [.[] | select(.weekday | contains($WEEKDAY))]
                 ' config.json)" \
@@ -36,9 +34,14 @@ jobs:
       CHAT_ID: ${{ secrets[format('{0}_CHAT_ID', matrix.city.name)] }}
 
     steps:
+      - run: |
+          echo "DATETIME=$(\
+              date -d '${{ matrix.city.weekday }} ${{ matrix.city.time }}' +'%A %H:%M %d.%m.%Y' | \
+              sed -E 's/Monday/Понедельник/; s/Tuesday/Вторник/; s/Wednesday/Среда/; s/Thursday/Четверг/; s/Friday/Пятница/; s/Saturday/Суббота/; s/Sunday/Воскресенье/'\
+          )" >> $GITHUB_ENV
       - name: Announce Hangout
         env:
-          MESSAGE: ${{ format(matrix.city.message, matrix.city.time, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
+          MESSAGE: ${{ format(matrix.city.message, env.DATETIME, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
