@@ -50,8 +50,7 @@ jobs:
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage)
           if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
-            echo "Error: $(echo $RESPONSE | jq .description)"
-            exit 1
+            exit "Error: $(echo $RESPONSE | jq .description)"
           fi
           echo "MESSAGE_ID=$(echo $RESPONSE | jq .result.message_id)" >> $GITHUB_ENV
       - name: Pin announce message
@@ -66,8 +65,7 @@ jobs:
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage)
           if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
-            echo "Error: $(echo $RESPONSE | jq .description)"
-            exit 1
+            exit "Error: $(echo $RESPONSE | jq .description)"
           fi
       - name: Presence poll
         run: |
@@ -86,6 +84,5 @@ jobs:
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPoll)
           if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
-            echo "Error: $(echo $RESPONSE | jq .description)"
-            exit 1
+            exit "Error: $(echo $RESPONSE | jq .description)"
           fi
