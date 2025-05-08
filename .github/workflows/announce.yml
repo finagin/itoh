@@ -17,4 +17,4 @@ jobs:
         run: |
           JQ_ACTIONS="[.defaults as $defaults | .cities[] | ($defaults + .)]"               # Merge defaults with each city
           JQ_ACTIONS+=" | .[] | select(.weekday | contains(\"$(date -d '+2day' +%A)\"))"   # Filter by weekday
-          echo "cities=$(jq -cS --arg JQ_ACTIONS '$JQ_ACTIONS' '$JQ_ACTIONS' config.json)"
+          echo "cities=$(jq -cS --arg JQ_ACTIONS '$JQ_ACTIONS' $JQ_ACTIONS config.json)"
