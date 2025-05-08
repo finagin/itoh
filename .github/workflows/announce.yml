@@ -15,7 +15,9 @@ jobs:
       - name: Extract cities
         id: extractor
         run: |
-          echo "cities=$(jq -cS '[.defaults as $defaults | .cities[] | ($defaults + .)]' config.json)" >> "$GITHUB_OUTPUT"
+          JQ_ACTIONS="[.defaults as $defaults | .cities[] | ($defaults + .)]"               # Merge defaults with each city
+          JQ_ACTIONS+=" | .[] | select(.weekday | contains(\"$(date -d '+2day' +%A)\"))"   # Filter by weekday
+          echo "cities=$(jq -cS '${JQ_ACTIONS}' config.json)" >> "$GITHUB_OUTPUT"
 
   announce-hangout:
     name: "Announce hangout at ${{ matrix.city.name }}"
