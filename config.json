@@ -1,4 +1,5 @@
 {
+    "$schema": "./config.spec.json",
     "defaults": {
         "weekday": "saturday",
         "time": "20:00",
@@ -12,7 +13,8 @@
         {
             "name": "Kazan",
             "timezone": "Europe/Moscow",
-            "time": "19:00"
+            "time": "19:00",
+            "asdfdsg": "adfsgdhh"
         }
     ]
 }

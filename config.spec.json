@@ -1,0 +1,66 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+        "city": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z-]*$"
+        },
+        "timezone": {
+            "type": "string",
+            "pattern": "^[a-zA-Z]+/([a-zA-Z_-]+|[A-Z]+[-+](1[0-2]|[0-9]))$"
+        },
+        "weekday": {
+            "type": "string",
+            "enum": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ]
+        },
+        "message": {
+            "type": "string",
+            "description": "Шаблон сообщения, которое будет отправлено в чат. Доступные плейсхолдеры:\n- {0} - время встречи\n- {1} - место встречи\n- {2} - дополнительная информация\n\nПример: \"Встреча в {0} в {1}. {2}\""
+        },
+        "time": {
+            "type": "string",
+            "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+        }
+    },
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "defaults": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "message": {"$ref": "#/definitions/message"},
+                "time": {"$ref": "#/definitions/time"},
+                "weekday": {"$ref": "#/definitions/weekday"}
+            },
+            "required": ["weekday", "time", "message"]
+        },
+        "cities": {
+            "type": "array",
+            "items": {
+                "additionalProperties": false,
+                "properties": {
+                    "name": {"$ref": "#/definitions/city"},
+                    "timezone": {"$ref": "#/definitions/timezone"},
+                    "message": {"$ref": "#/definitions/message"},
+                    "time": {"$ref": "#/definitions/time"},
+                    "weekday": {"$ref": "#/definitions/weekday"}
+                },
+                "required": ["name", "timezone"],
+                "type": "object"
+            }
+        }
+    },
+    "required": ["$schema", "defaults", "cities"]
+}
