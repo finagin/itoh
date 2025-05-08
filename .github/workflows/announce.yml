@@ -16,7 +16,7 @@ jobs:
         id: extractor
         run: |
           WEEKDAY=$(date -d '+2day' +%A)
-          echo "cities=$(jq -cS --arg WEEKDAY "$WEEKDAY" ' \
-                  [.defaults as $defaults | .cities[] | ($defaults + .)] \
-                  | .[] | select(.weekday | contains($WEEKDAY)) \
+          echo "cities=$(jq -cS --arg WEEKDAY "$WEEKDAY" '
+                  [.defaults as $defaults | .cities[] | ($defaults + .)]
+                  | .[] | select(.weekday | contains($WEEKDAY))
                 ' config.json)"
