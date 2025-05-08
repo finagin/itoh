@@ -18,8 +18,8 @@ jobs:
           echo "cities=$(jq -cS --arg WEEKDAY "$(date -d '+2day' +%A)" '
                   [.defaults as $defaults | .cities[] | ($defaults + .)]
                   | .[] | select(.weekday | contains($WEEKDAY))
-                ' config.json)" \
-          >> $GITHUB_OUTPUT
+                ' config.json)"
+#          >> $GITHUB_OUTPUT
 
   announce-hangout:
     name: "Announce hangout at ${{ matrix.city.name }}"
