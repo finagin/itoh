@@ -1,5 +1,5 @@
 on:
-  schedule: [{cron: '0 11 * * *'}]
+  schedule: [{cron: '0 11 * * 5'}] # Every Friday at 11:00 UTC
 
 jobs:
   define-matrix:
@@ -29,10 +29,8 @@ jobs:
     strategy:
       matrix:
         city: ${{ fromJSON(needs.define-matrix.outputs.cities) }}
-
     env:
       CHAT_ID: ${{ secrets[format('{0}_CHAT_ID', matrix.city.name)] }}
-
     steps:
       - name: Calculate next ${{ matrix.city.name }} hangout time
         run: |
@@ -50,7 +48,6 @@ jobs:
               "chat_id": ${{ env.CHAT_ID }},
               "text": "${{ env.MESSAGE }}",
               "parse_mode": "MarkdownV2",
-              "protect_content": true,
               "disable_notification": true,
               "link_preview_options": {"is_disabled": true}
             }' \
@@ -60,21 +57,6 @@ jobs:
             exit 1
           fi
           echo "MESSAGE_ID=$(echo $RESPONSE | jq .result.message_id)" >> $GITHUB_ENV
-      - name: Pin announce message
-        if: ${{ env.MESSAGE_ID }}
-        run: |
-          RESPONSE=$(curl -s -X POST \
-            -H 'Content-Type: application/json' \
-            -d '{
-              "chat_id": ${{ env.CHAT_ID }},
-              "message_id": ${{ env.MESSAGE_ID }},
-              "disable_notification": true
-            }' \
-            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage)
-          if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
-            echo "Error: $(echo $RESPONSE | jq .description)"
-            exit 1
-          fi
       - name: Presence poll
         run: |
           RESPONSE=$(curl -s -X POST \
@@ -88,9 +70,25 @@ jobs:
                 {"text": "Нет"}
               ],
               "is_anonymous": false,
-              "is_closed": true
+              "disable_notification": true,
+              "protect_content": true
             }' \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPoll)
+          if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
+            echo "Error: $(echo $RESPONSE | jq .description)"
+            exit 1
+          fi
+      - name: Pin announce message
+        if: ${{ env.MESSAGE_ID }}
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "chat_id": ${{ env.CHAT_ID }},
+              "message_id": ${{ env.MESSAGE_ID }},
+              "disable_notification": true
+            }' \
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage)
           if [ $(echo $RESPONSE | jq .ok) != "true" ]; then
             echo "Error: $(echo $RESPONSE | jq .description)"
             exit 1
