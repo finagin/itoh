@@ -44,7 +44,7 @@ jobs:
           MESSAGE: ${{ format(matrix.city.message, env.DATETIME, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
           echo "MESSAGE=$(\
-            echo '${{ env.message }}' | \
+            echo '${{ env.MESSAGE }}' | \
             sed 's/\./\\\./g' | \
             sed 's/\#/\\\#/g' \
           )" >> $GITHUB_ENV
