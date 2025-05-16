@@ -49,8 +49,6 @@ jobs:
             sed 's/\#/\\\#/g' \
           )" >> $GITHUB_ENV
       - name: Announce Hangout
-        env:
-          MESSAGE: ${{ env.MESSAGE }}
         run: |
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
