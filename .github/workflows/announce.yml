@@ -46,7 +46,7 @@ jobs:
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
-              "chat_id": ${{ env.CHAT_ID }},
+              "chat_id": "${{ env.CHAT_ID }}",
               "text": "${{ env.MESSAGE }}",
               "parse_mode": "MarkdownV2",
               "disable_notification": true,
