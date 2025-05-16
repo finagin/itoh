@@ -43,12 +43,12 @@ jobs:
         env:
           MESSAGE: ${{ format(matrix.city.message, env.DATETIME, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
-          MESSAGE=$(echo "${{ env.MESSAGE }}" | sed 's/\./\\\./g')
+          echo "MESSAGE=$(echo '${{ env.MESSAGE }}' | sed 's/\./\\\./g')" >> $GITHUB_ENV
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": ${{ env.CHAT_ID }},
-              "text": "${MESSAGE}",
+              "text": "${{ env.MESSAGE }}",
               "parse_mode": "MarkdownV2",
               "disable_notification": true,
               "link_preview_options": {"is_disabled": true}
