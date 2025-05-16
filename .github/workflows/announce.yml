@@ -45,9 +45,9 @@ jobs:
         run: |
           echo "MESSAGE=$(\
             echo '${{ env.MESSAGE }}' | \
-            sed 's/\./\\\\./g' | \
-            sed 's/\#/\\\\#/g' \
-          )" >> $GITHUB_ENV
+            sed 's/\./\\\\\./g' | \
+            sed 's/\#/\\\\\#/g' \
+          )"
       - name: Announce Hangout
         env:
           MESSAGE: ${{ env.MESSAGE }}
