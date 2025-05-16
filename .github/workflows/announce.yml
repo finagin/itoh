@@ -39,11 +39,17 @@ jobs:
               date -d '${{ matrix.city.weekday }} ${{ matrix.city.time }}' +'%A %H:%M %d.%m.%Y' | \
               sed -E 's/Monday/Понедельник/; s/Tuesday/Вторник/; s/Wednesday/Среда/; s/Thursday/Четверг/; s/Friday/Пятница/; s/Saturday/Суббота/; s/Sunday/Воскресенье/'\
           )" >> $GITHUB_ENV
-      - name: Announce Hangout
+      - name: Format message
         env:
           MESSAGE: ${{ format(matrix.city.message, env.DATETIME, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
-          echo "MESSAGE=$(echo '${{ env.MESSAGE }}' | sed 's/\./\\\./g')" >> $GITHUB_ENV
+          echo "MESSAGE=$(\
+            echo '${{ matrix.city.message }}' | \
+            sed 's/\./\\\./g' \
+            sed 's/\#/\\\#/g' \
+          )" >> $GITHUB_ENV
+      - name: Announce Hangout
+        run: |
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
