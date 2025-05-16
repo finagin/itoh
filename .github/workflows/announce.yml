@@ -36,7 +36,7 @@ jobs:
       - name: Calculate next ${{ matrix.city.name }} hangout time
         run: |
           echo "DATETIME=$(\
-              date -d '${{ matrix.city.weekday }} ${{ matrix.city.time }}' +'%A %H:%M %d.%m.%Y' | \
+              date -d '${{ matrix.city.weekday }} ${{ matrix.city.time }}' +'%A %H:%M %d\\.%m\\.%Y' | \
               sed -E 's/Monday/Понедельник/; s/Tuesday/Вторник/; s/Wednesday/Среда/; s/Thursday/Четверг/; s/Friday/Пятница/; s/Saturday/Суббота/; s/Sunday/Воскресенье/'\
           )" >> $GITHUB_ENV
       - name: Announce Hangout
