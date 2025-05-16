@@ -1,5 +1,4 @@
 on:
-  push:
   schedule: [{cron: '0 11 * * *'}]
 
 jobs:
@@ -43,6 +42,7 @@ jobs:
         env:
           MESSAGE: ${{ format(matrix.city.message, env.DATETIME, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
+          MESSAGE="${{ env.MESSAGE }}"
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
