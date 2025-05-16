@@ -43,7 +43,7 @@ jobs:
         env:
           MESSAGE: ${{ format(matrix.city.message, env.DATETIME, secrets[format('{0}_AREA', matrix.city.name)], secrets[format('{0}_ADDITIONAL', matrix.city.name)]) }}
         run: |
-          MESSAGE=$(echo ${{ env.MESSAGE }} | sed 's/\./\\\./g')
+          MESSAGE=$(echo "${{ env.MESSAGE }}" | sed 's/\./\\\./g')
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
