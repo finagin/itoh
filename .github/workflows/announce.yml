@@ -1,5 +1,4 @@
 on:
-  push:
   schedule: [{cron: '0 11 * * *'}]
 
 jobs:
@@ -63,7 +62,7 @@ jobs:
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
-              "chat_id": ${{ env.CHAT_ID }},
+              "chat_id": "${{ env.CHAT_ID }}",
               "question": "Придёшь на встречу?",
               "options": [
                 {"text": "Да"},
@@ -85,7 +84,7 @@ jobs:
           RESPONSE=$(curl -s -X POST \
             -H 'Content-Type: application/json' \
             -d '{
-              "chat_id": ${{ env.CHAT_ID }},
+              "chat_id": "${{ env.CHAT_ID }}",
               "message_id": ${{ env.MESSAGE_ID }},
               "disable_notification": true
             }' \
